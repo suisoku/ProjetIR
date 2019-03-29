@@ -14,13 +14,11 @@ blabla blabla
 
 ##  TODO LIST
 
-[ ] Identifier les outils à utiliser
-[X] Identifier des tutoriels pour faire du traitement de texte
-[ ] Faire un tutorial avec un exemple facile 
-[ ] Transformer les données de l'Assemblé Génerale en un format traitable par R
-[ ] Faire les premiers extractions de données 
-[ ] ......
-[ ] ...
+- [ ] Identifier les outils à utiliser
+- [X] Identifier des tutoriels pour faire du traitement de texte
+- [ ] Faire un tutorial avec un exemple facile 
+- [ ] Transformer les données de l'Assemblé Génerale en un format traitable par R
+- [ ] Faire les premiers extractions de données 
 
 
 ## Tutoriels
