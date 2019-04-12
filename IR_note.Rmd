@@ -39,7 +39,7 @@ library(stringi)
 
 
 textTreeBase <- read_html("http://www.assemblee-nationale.fr/14/cri/2016-2017/20170123.asp")
-textSeance1<- textTreeBase %>% html_nodes("body") %>% html_text() #extraction dans le noeud <body> puis dnas le noeud <p>
+textSeance123<- textTreeBase %>% html_nodes("body") %>% html_nodes("p") %>% html_text() #extraction dans le noeud <body> puis dnas le noeud <p>
 #stri_replace_all(text,"", regex = "\r")
 #stri_replace_all(text,"", regex = "\t")
 #stri_replace_all(text,"", regex = "\n")
