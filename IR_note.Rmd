@@ -30,20 +30,28 @@ plot(pressure)
 
 ```{r}
 
+
+library(rvest)
+
+textTreeBase <- read_html("http://www.assemblee-nationale.fr/14/cri/2016-2017/20170123.asp")
+
+```
+
+
+```{r}
+library(stringi)
+textSeance20170123<- textTreeBase %>% html_nodes("body") %>% html_nodes("p") %>% html_text() #extraction dans le noeud <body> puis dnas le noeud <p>
 # Traitement réalisé
 # &nbsp;
 # <.*?>
-# 
-library(rvest)
-library(stringi)
+# \r \t \n
 
+stri_replace_all(textSeance20170123,"", regex = "\r")
+stri_replace_all(textSeance20170123,"", regex = "\t")
+stri_replace_all(textSeance20170123,"", regex = "\n")
+stri_replace_all(textSeance20170123,"", regex = "<.*?>")
 
-textTreeBase <- read_html("http://www.assemblee-nationale.fr/14/cri/2016-2017/20170123.asp")
-textSeance123<- textTreeBase %>% html_nodes("body") %>% html_nodes("p") %>% html_text() #extraction dans le noeud <body> puis dnas le noeud <p>
-#stri_replace_all(text,"", regex = "\r")
-#stri_replace_all(text,"", regex = "\t")
-#stri_replace_all(text,"", regex = "\n")
-
+textSeance20170123
 
 ```
 
