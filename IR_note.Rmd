@@ -9,30 +9,10 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-
 ```{r}
-
-
 library(rvest)
-
+library(xml2)
+# Extraction de la page html d'une séance unique (123eme) du 22/02/2017
 textTreeBase <- read_html("http://www.assemblee-nationale.fr/14/cri/2016-2017/20170123.asp")
 
 ```
@@ -40,20 +20,21 @@ textTreeBase <- read_html("http://www.assemblee-nationale.fr/14/cri/2016-2017/20
 
 ```{r}
 library(stringi)
+# Extraction 
 textSeance20170123<- textTreeBase %>% html_nodes("body") %>% html_nodes("p") %>% html_text() #extraction dans le noeud <body> puis dnas le noeud <p>
-# Traitement réalisé
-# &nbsp;
-# <.*?>
-# \r \t \n
 
-stri_replace_all(textSeance20170123,"", regex = "\r")
-stri_replace_all(textSeance20170123,"", regex = "\t")
-stri_replace_all(textSeance20170123,"", regex = "\n")
-stri_replace_all(textSeance20170123,"", regex = "<.*?>")
 
-textSeance20170123
+library(dplyr)
+# Création d'un object Data
+text_seance20170123 <- tibble(line = 1:length(textSeance20170123), text = textSeance20170123)
 
+# utilisation des regex pour désigner les hommes et les femmes
+sexeM <- c("M\\. ")
+sexeF <- c("Mme ")
+
+#On ne garde que les discour des hommes et femmes dicriminer par leur sexe
+text_seance20170123 <- text_seance20170123 %>%
+  rowwise() %>% 
+  mutate(sexe = if(str_detect(text, sexeM))1 else if(str_detect(text, sexeF)) 0 else 2) %>% 
+  filter(sexe < 2)
 ```
-
-
-
