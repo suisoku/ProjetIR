@@ -12,18 +12,17 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(rvest)
 library(xml2)
+library(stringi)
 # Extraction de la page html d'une séance unique (123eme) du 22/02/2017
 textTreeBase <- read_html("http://www.assemblee-nationale.fr/14/cri/2016-2017/20170123.asp")
 
-```
-
-
-```{r}
-library(stringi)
 # Extraction 
 textSeance20170123<- textTreeBase %>% html_nodes("body") %>% html_nodes("p") %>% html_text() #extraction dans le noeud <body> puis dnas le noeud <p>
 
+```
 
+```{r}
+library(stringr)
 library(dplyr)
 # Création d'un object Data
 text_seance20170123 <- tibble(line = 1:length(textSeance20170123), text = textSeance20170123)
@@ -35,6 +34,75 @@ sexeF <- c("Mme ")
 #On ne garde que les discour des hommes et femmes dicriminer par leur sexe
 text_seance20170123 <- text_seance20170123 %>%
   rowwise() %>% 
-  mutate(sexe = if(str_detect(text, sexeM))1 else if(str_detect(text, sexeF)) 0 else 2) %>% 
-  filter(sexe < 2)
+  mutate(sexe = if(str_detect(text, sexeM)) "Homme" else if(str_detect(text, sexeF)) "Femme" else "autre") %>% 
+  filter(sexe != "autre")
+```
+
+Les mot les plus utiliser pendant le débat
+```{r}
+library(tidytext)
+library(ggplot2)
+t <- text_seance20170123 %>% 
+  unnest_tokens(word, text)
+
+t %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 100) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(word, n)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip()
+
+#Filtre les nombres dans les mots et calcule le nombres de mots identique en fonction du sexe
+t2 <- t %>%
+  count(word,sexe, sort = TRUE) %>%
+  filter(!str_detect(word, "[0-9]"))
+```
+
+Regroupe par sexe les mots les plus utilisé
+```{r}
+
+library(tidytext)
+library(ggplot2)
+t2 %>%
+  group_by(sexe) %>%
+  top_n(10) %>%
+  ungroup() %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(word, n, fill = sexe)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~sexe, scales = "free_y") +
+  labs(y = "Les Mots Favoris", x = NULL) +
+  coord_flip()
+
+t2 %>%
+  count(sexe, sort =F)
+```
+```{r}
+#Les mots exclus
+word <- c("de","et","la","le","les","à","des","en","m","du","que","pour","qui","nous","mme", "je","qui","pas","ce","sur","dans","par","au","a","est","ne","aux","il")
+
+stop_mot <- data_frame(word)
+
+t3 <-t2
+t3 <- t3 %>%
+  anti_join(stop_mot)
+```
+
+
+```{r}
+t3 %>%
+  group_by(sexe) %>%
+  top_n(10) %>%
+  ungroup() %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(word, n, fill = sexe)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~sexe, scales = "free_y") +
+  labs(y = "Les Mots Favoris", x = NULL) +
+  coord_flip()
+
+t3 %>%
+  count(sexe, sort =F)
 ```
