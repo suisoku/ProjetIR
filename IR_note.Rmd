@@ -106,3 +106,76 @@ t3 %>%
 t3 %>%
   count(sexe, sort =F)
 ```
+
+```{r}
+install.packages("syuzhet")
+library(syuzhet)
+my_colors <- c("#E69F00", "#56B4E9", "#009E73", "#CC79A7", "#D55E00", "#D65E00")
+
+
+
+library(syuzhet)
+install.packages("tm")
+library(tm)
+library(ggplot2)
+result <-get_nrc_sentiment(t[["word"]])
+result1<-data.frame(t(result))
+new_result <- data.frame(rowSums(result1))
+names(new_result)[1] <- "count"
+new_result <- cbind("sentiment" = rownames(new_result), new_result)
+rownames(new_result) <- NULL
+qplot(sentiment, data=new_result[1:8,], weight=count, geom="bar",fill=sentiment)+ggtitle("TedTalk Sentiments")
+qplot(sentiment, data=new_result[9:10,], weight=count, geom="bar",fill=sentiment)+ggtitle("TedTalk Sentiments")
+
+```
+
+```{r}
+
+t$word[t$sexe=="Femme"]->wordofWomen
+t$word[t$sexe=="Homme"]->wordofMan
+
+#partie Homme 
+library(syuzhet)
+install.packages("tm")
+library(tm)
+library(ggplot2)
+resultMan <-get_nrc_sentiment(wordofMan)
+resultMan1<-data.frame(t(resultMan))
+new_resultMan <- data.frame(rowSums(resultMan1))
+names(new_resultMan)[1] <- "count"
+new_resultMan <- cbind("sentiment" = rownames(new_resultMan), new_resultMan)
+rownames(new_resultMan) <- NULL
+qplot(sentiment, data=new_resultMan[1:8,], weight=count, geom="bar",fill=sentiment)+ggtitle("TedTalk Sentiments Homme ")
+qplot(sentiment, data=new_resultMan[9:10,], weight=count, geom="bar",fill=sentiment)+ggtitle("TedTalk Sentiments Homme ")
+
+#partie Femme 
+library(syuzhet)
+install.packages("tm")
+library(tm)
+library(ggplot2)
+resultWomen <-get_nrc_sentiment(wordofWomen)
+resultWomen1<-data.frame(t(resultWomen))
+new_resultWomen <- data.frame(rowSums(resultWomen1))
+names(new_resultWomen)[1] <- "count"
+new_resultWomen <- cbind("sentiment" = rownames(new_resultWomen), new_resultWomen)
+rownames(new_resultMan) <- NULL
+qplot(sentiment, data=new_resultWomen[1:8,], weight=count, geom="bar",fill=sentiment)+ggtitle("TedTalk Sentiments Femme")
+qplot(sentiment, data=new_resultWomen[9:10,], weight=count, geom="bar",fill=sentiment)+ggtitle("TedTalk Sentiments Femme")
+
+
+```
+
+
+```{r}
+# 
+t  %>%   
+  inner_join(get_sentiments("nrc")) %>%
+  group_by(index = line %/% 25, sexe , sentiment) %>%
+  summarize(n = n()) %>%
+  ggplot(aes(x = index, y = n, fill = sexe )) + 
+  geom_bar(stat = "identity", alpha = 0.8) + 
+  facet_wrap(~ sentiment, ncol = 5) 
+
+ 
+
+```
