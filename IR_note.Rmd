@@ -50,7 +50,8 @@ Les mot les plus utiliser pendant le débat
 library(tidytext)
 library(ggplot2)
 t <- text_seance20170123 %>% 
-  unnest_tokens(word, text)
+  unnest_tokens(word, text) %>%
+  filter(!str_detect(word, "[0-9]"))
 
 t %>%
   count(word, sort = TRUE) %>%
@@ -64,7 +65,6 @@ t %>%
 #Filtre les nombres dans les mots et calcule le nombres de mots identique en fonction du sexe
 t2 <- t %>%
   count(word,sexe, sort = TRUE) %>%
-  filter(!str_detect(word, "[0-9]"))
 ```
 
 Regroupe par sexe les mots les plus utilisé
