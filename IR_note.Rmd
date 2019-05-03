@@ -38,11 +38,17 @@ text_seance20170123 <- tibble(line = 1:length(textSeance20170123), text = textSe
 sexeM <- c("M\\. ")
 sexeF <- c("Mme ")
 
+president <- c("M\\. le président\\.")
+
 #On ne garde que les discour des hommes et femmes dicriminer par leur sexe
 text_seance20170123 <- text_seance20170123 %>%
   rowwise() %>% 
   mutate(sexe = if(str_detect(text, sexeM)) "Homme" else if(str_detect(text, sexeF)) "Femme" else "autre") %>% 
   filter(sexe != "autre")
+
+text_seance20170123 <- text_seance20170123 %>%
+  rowwise() %>% 
+  mutate(rôle = if(str_detect(text,president)) "Président" else "Député")
 ```
 
 Les mot les plus utiliser pendant le débat
@@ -65,26 +71,6 @@ t %>%
 #Filtre les nombres dans les mots et calcule le nombres de mots identique en fonction du sexe
 t2 <- t %>%
   count(word,sexe, sort = TRUE) %>%
-```
-
-Regroupe par sexe les mots les plus utilisé
-```{r}
-
-library(tidytext)
-library(ggplot2)
-t2 %>%
-  group_by(sexe) %>%
-  top_n(10) %>%
-  ungroup() %>%
-  mutate(word = reorder(word, n)) %>%
-  ggplot(aes(word, n, fill = sexe)) +
-  geom_col(show.legend = FALSE) +
-  facet_wrap(~sexe, scales = "free_y") +
-  labs(y = "Les Mots Favoris", x = NULL) +
-  coord_flip()
-
-t2 %>%
-  count(sexe, sort =F)
 ```
 
 
@@ -133,7 +119,7 @@ t4 %>%
   labs(y = "Les Mots Favoris", x = NULL) +
   coord_flip()
 ```
-
+On Observe que le premier filtre n'est pas adéquate car il retire bien trop de mot sigificatif comme "politiques"
 ```{r}
 
 library(syuzhet)
