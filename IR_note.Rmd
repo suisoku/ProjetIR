@@ -134,8 +134,10 @@ new_result <- data.frame(rowSums(result1))
 names(new_result)[1] <- "count"
 new_result <- cbind("sentiment" = rownames(new_result), new_result)
 rownames(new_result) <- NULL
-qplot(sentiment, data=new_result[1:8,], weight=count, geom="bar",fill=sentiment)+ggtitle("TedTalk Sentiments")
-qplot(sentiment, data=new_result[9:10,], weight=count, geom="bar",fill=sentiment)+ggtitle("TedTalk Sentiments")
+qplot(sentiment, data=new_result[1:8,], weight=count, geom="bar",fill=sentiment)+ggtitle("Graphe d'analyse des Sentiments de tous le discours")
+qplot(sentiment, data=new_result[9:10,], weight=count, geom="bar",fill=sentiment)+ggtitle("Graphe d'analyse de tous le discours Positif et Negatif")
+#Pour ces deux graphe on a analys? les termes utiliser dans les discours sans differencier entre homme et femme. On va analyser les sentiments en discours des gens politique en general. le premier graphe nous permet de deduire que il utiliser les mots de confiance le plus souvent apres on voit les termes d'anticipation et de peur.
+#Pour le deuxieme graphe il nous illustre que les termes positifs domine sur les termes negatifs dans les discours.
 
 ```
 
@@ -154,8 +156,9 @@ new_resultMan <- data.frame(rowSums(resultMan1))
 names(new_resultMan)[1] <- "count"
 new_resultMan <- cbind("sentiment" = rownames(new_resultMan), new_resultMan)
 rownames(new_resultMan) <- NULL
-qplot(sentiment, data=new_resultMan[1:8,], weight=count, geom="bar",fill=sentiment)+ggtitle("TedTalk Sentiments Homme ")
-qplot(sentiment, data=new_resultMan[9:10,], weight=count, geom="bar",fill=sentiment)+ggtitle("TedTalk Sentiments Homme ")
+qplot(sentiment, data=new_resultMan[1:8,], weight=count, geom="bar",fill=sentiment)+ggtitle("Graphe d'analyse des Sentiments discours Homme ")
+qplot(sentiment, data=new_resultMan[9:10,], weight=count, geom="bar",fill=sentiment)+ggtitle("Graphe d'analyse des Sentiments discours Homme ")
+
 
 #partie Femme 
 library(syuzhet)
@@ -167,10 +170,9 @@ new_resultWomen <- data.frame(rowSums(resultWomen1))
 names(new_resultWomen)[1] <- "count"
 new_resultWomen <- cbind("sentiment" = rownames(new_resultWomen), new_resultWomen)
 rownames(new_resultMan) <- NULL
-qplot(sentiment, data=new_resultWomen[1:8,], weight=count, geom="bar",fill=sentiment)+ggtitle("TedTalk Sentiments Femme")
-qplot(sentiment, data=new_resultWomen[9:10,], weight=count, geom="bar",fill=sentiment)+ggtitle("TedTalk Sentiments Femme")
-
-
+qplot(sentiment, data=new_resultWomen[1:8,], weight=count, geom="bar",fill=sentiment)+ggtitle("Graphe d'analyse des Sentiments discours Femme")
+qplot(sentiment, data=new_resultWomen[9:10,], weight=count, geom="bar",fill=sentiment)+ggtitle("Graphe d'analyse des Sentiments discours Femme")
+#en comparant le premier graphe entre femme et homme on peut deduire que les hommes parlent plus avec des termes de sentiment d'anticipation et de confiance alors que les femmes parlent de sentiment de peur, tristesse.La on peut deduire que les femmes y a une grande partie dans leur discours des expressions d'?motions plus que les hommes.
 ```
 
 
