@@ -184,3 +184,39 @@ t  %>%
  
 
 ```
+
+### Methodologie et Analyse
+Il peut etre interessant de montrer les relatations ou des correleations entre les mots pour cela  nous prodedons au calculs bi-grams :
+sequence continue de 2 mots
+
+D'abord nous allons sectionner le tableau de mot duc corpus en tokens de 2 
+Puis on genere un tableau avec 2 colonnes reprenants les token calcules
+Puis on enleve les mots non pertinants
+Finallement on trie les bigrams par fequence
+
+```{r}
+library(tidyr)
+# 2-token unnnesting
+textBigram <- t %>%  unnest_tokens(ngramData, word, token = "ngrams", n = 2)
+#sort and count
+textBigram %>% count(ngramData, sort = TRUE)
+
+bigrams_separated <- textBigram %>%
+  separate(ngramData, c("ngram1", "ngram2"), sep = " ")
+
+
+
+bigrams_filtered <- bigrams_separated %>%
+  filter(!ngram1 %in% motstop2$word) %>%
+  filter(!ngram2 %in% motstop2$word)
+
+# new bigram counts:
+bigram_counts <- bigrams_filtered %>% 
+  count(ngram1, ngram2, sort = TRUE)
+
+bigram_counts
+
+```
+
+Resultat :
+Les bigrams  comme secretaire d'etat et  groupe socialiste apparaissent le plus soucant dans ce corpus ce qui surligne leur importance dans le debat.
