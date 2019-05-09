@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 #Package
 install.packages("syuzhet")
 install.packages("tm")
+install.packages("tidyr")
 ```
 
 ```{r}
@@ -54,6 +55,8 @@ text_seance20170123 <- text_seance20170123 %>%
 Les mot les plus utiliser pendant le débat
 ```{r}
 library(tidytext)
+library(stringr)
+library(dplyr)
 library(ggplot2)
 t <- text_seance20170123 %>% 
   unnest_tokens(word, text) %>%
@@ -196,8 +199,12 @@ Finallement on trie les bigrams par fequence
 
 ```{r}
 library(tidyr)
+library(stringr)
+library(dplyr)
+library(tidytext)
 # 2-token unnnesting
-textBigram <- t %>%  unnest_tokens(ngramData, word, token = "ngrams", n = 2)
+textBigram <- t %>%  
+  unnest_tokens(ngramData, word, token = "ngrams", n = 2)
 #sort and count
 textBigram %>% count(ngramData, sort = TRUE)
 
