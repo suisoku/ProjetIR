@@ -70,7 +70,7 @@ t %>%
 
 #Filtre les nombres dans les mots et calcule le nombres de mots identique en fonction du sexe
 t2 <- t %>%
-  count(word,sexe, sort = TRUE) %>%
+  count(word,sexe, sort = TRUE)
 ```
 
 
